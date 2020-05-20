@@ -4,6 +4,9 @@ import sklearn
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn import metrics
+
 
 def read(file_path):
     'Lese die Pilz-Daten ein'
@@ -29,17 +32,23 @@ def label_encode(data):
         data[col]=encoder.fit_transform(data[col])
     return data
 
-def visualize_data():
+def visualize_data(data):
     pass
 
-def knn_model():
+def create_scatter_plot():
     pass
 
-def train():
-    pass
-
-def test():
-    pass
+def knn_model(k=5):
+    knn = KNeighborsClassifier(n_neighbors=k,metric="euclidean")
+    return knn
+def training(knn, X_train, X_test, y_train, y_test):
+    knn.fit(X_train, y_train)
+    y_prediction = knn.predict(X_test)
+    # accurarcy = metrics.accuracy_score(y_test,  y_prediction)
+    conf_matrix = metrics.confusion_matrix(y_test, y_prediction)
+    class_report = metrics.classification_report(y_test, y_prediction)
+    print(conf_matrix)
+    print(class_report)
 
 
 def valid():
@@ -51,3 +60,5 @@ file_path= r".\data\mushrooms.csv"
 
 raw_data = read(file_path)
 X_train, X_test, X_valid, y_train, y_test, y_valid = prepare_data(raw_data)
+knn = knn_model()
+training(knn,X_train, X_test,y_train, y_test)
