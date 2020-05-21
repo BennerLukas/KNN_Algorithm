@@ -5,9 +5,8 @@ import  math
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn import metrics
 from collections import  Counter
+import time
 
 def read(file_path):
     'Lese die Pilz-Daten ein'
@@ -42,6 +41,7 @@ def calc_distance(row1, row2):
 
 def get_neighbour(train, row_test, k,y):
     'ermittelt die k nächsten Nachbarn und gibt sie in Liste zurück'
+    t1 = time.time()
     distances = []
     for row in train:
         dist=calc_distance(row_test, row)
@@ -50,6 +50,7 @@ def get_neighbour(train, row_test, k,y):
     neighbours = []
     for i in range(k):
         neighbours.append(distances[i])
+    print(f"get_Neighbour: {(time.time()-t1):.6f}")
     return neighbours
 
 def predict(neighbours):
@@ -60,6 +61,7 @@ def predict(neighbours):
 
 
 def valid(y_test, pred):
+    'ermittle Richtigkeit für Confusion Matrix (TP,FN, TN, FP)'
     if pred == 1:
         if y_test == pred:
             return "TP"
@@ -72,6 +74,7 @@ def valid(y_test, pred):
             return  "FN"
         
 def eval_results(results, anz):
+    'berechne Kennzahlen zur Validierung des Systems'
     key = Counter(results).keys()
     values = Counter(results).values()
     eval_dict = dict(zip(key, values))
@@ -98,8 +101,11 @@ y = y_train.tolist()
 train = X_train.values.tolist()
 
 results=[]
-gesamt_anzahl=len(X_test)
+gesamt_anzahl=100
 for i in range(gesamt_anzahl):
+
+    t0 = time.time()
+
     row = X_test.iloc[i].tolist()
     neighbour = get_neighbour(train, row, 5, y_train.iloc[i])
     pred = predict(neighbour)
@@ -107,5 +113,6 @@ for i in range(gesamt_anzahl):
     # print(result)
     results.append(result)
     
+    print(f"Zeit: {(time.time()-t0):.5f}")
 
 eval_results(results, gesamt_anzahl)

@@ -17,6 +17,7 @@ def read(file_path):
 
 
 def prepare_data(data):
+    'Label encode Daten und erstelle Test und Trainingsdatensätze'
     data = label_encode(data)
     y = data["class"]
     X = data.drop(["class"],axis=1)
@@ -26,7 +27,7 @@ def prepare_data(data):
     return X_train, X_test, X_valid, y_train, y_test, y_valid
 
 def label_encode(data):
-
+    'Label-Encode Daten -> aus String wird einzigartige Zahl'
     encoder = LabelEncoder()
     for  col in data.columns:
         data[col]=encoder.fit_transform(data[col])
@@ -39,9 +40,11 @@ def create_scatter_plot():
     pass
 
 def knn_model(k=5):
+    'erstelle das KNN Model mit seinen Parametern'
     knn = KNeighborsClassifier(n_neighbors=k,metric="euclidean")
     return knn
 def training(knn, X_train, X_test, y_train, y_test):
+    'trainiere das KNN_Model mit Trainingsdaten und Teste es auf neuen Daten'
     knn.fit(X_train, y_train)
     y_prediction = knn.predict(X_test)
     # accurarcy = metrics.accuracy_score(y_test,  y_prediction)
@@ -52,10 +55,11 @@ def training(knn, X_train, X_test, y_train, y_test):
 
 
 def valid():
+    'validiere das Model abschließend auf vollkommen unbekannten Daten'
     pass
 
 
-#-------------------------------#
+#------------Main---------------#
 file_path= r".\data\mushrooms.csv"
 
 raw_data = read(file_path)
