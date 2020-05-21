@@ -8,6 +8,8 @@ from sklearn.model_selection import train_test_split
 from collections import  Counter
 import time
 
+from scipy.spatial import distance
+
 def read(file_path):
     'Lese die Pilz-Daten ein'
     # file_path= r".\data\mushrooms.csv"
