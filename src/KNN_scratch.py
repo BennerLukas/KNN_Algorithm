@@ -15,16 +15,13 @@ def read(file_path):
     data = pd.read_csv(file_path, sep=",")
     return data
 
-
-
 def prepare_data(data):
     data = label_encode(data)
     y = data["class"]
     X = data.drop(["class"],axis=1)
-    X_train, X_test, y_train, y_test = train_test_split(X,y, train_size=0.7, test_size=0.3, random_state=5)
-    X_test, X_valid, y_test, y_valid = train_test_split(X_test, y_test, train_size=0.7, random_state=5)
-
-    return X_train, X_test, X_valid, y_train, y_test, y_valid
+    X_train, X_test, y_train, y_test = train_test_split(X,y, train_size=0.8, test_size=0.2, random_state=5)
+    
+    return X_train, X_test, y_train, y_test
 
 def label_encode(data):
 
@@ -35,14 +32,16 @@ def label_encode(data):
 
 
 
-# calculate_euclidean_distance
+
 def calc_distance(row1, row2):
+    'berechnet euklidischen Abstand: sqrt((x1-x2)**2)'
     distance=0
     for i in range(len(row1)):
         distance += (row1[i] - row2[i] )**2
     return math.sqrt(distance)
 
 def get_neighbour(train, row_test, k,y):
+    'ermittelt die k nächsten Nachbarn und gibt sie in Liste zurück'
     distances = []
     for row in train:
         dist=calc_distance(row_test, row)
@@ -54,6 +53,7 @@ def get_neighbour(train, row_test, k,y):
     return neighbours
 
 def predict(neighbours):
+    'ermittelt aus y der Nachbarn das y des zu bestimmtenden Pilzes'
     y= [i[-1] for i in neighbours]
     pred = max(set(y), key=y.count) # gibt häufigste Klasse
     return pred
@@ -74,28 +74,38 @@ def valid(y_test, pred):
 def eval_results(results, anz):
     key = Counter(results).keys()
     values = Counter(results).values()
+    eval_dict = dict(zip(key, values))
 
-    
+    print(eval_dict)
 
-    print(key, values)
+    tp= eval_dict["TP"]
+    fn=eval_dict["FN"]
+    tn = eval_dict["TN"]
+    fp = eval_dict["FP"]
+
+    sensitivity = tp / (tp+fn)
+    precision = tp/(tp+fp)
+    accuracy = (tp+tn)/(tp+tn+fp+fn)
+    print(sensitivity, precision, accuracy)
 
 #-------------------------------#
 file_path= r".\data\mushrooms.csv"
 
 raw_data = read(file_path)
-X_train, X_test, X_valid, y_train, y_test, y_valid = prepare_data(raw_data)
+X_train, X_test, y_train, y_test = prepare_data(raw_data)
 
 y = y_train.tolist()
 train = X_train.values.tolist()
-row = X_test.iloc[0].tolist()
 
 results=[]
-gesamt_anzahl=5
+gesamt_anzahl=len(X_test)
 for i in range(gesamt_anzahl):
     row = X_test.iloc[i].tolist()
     neighbour = get_neighbour(train, row, 5, y_train.iloc[i])
     pred = predict(neighbour)
-    results.append(valid(y_test.iloc[i], pred))
-    print(pred, y_test.iloc[i])
+    result = valid(y_test.iloc[i], pred)
+    # print(result)
+    results.append(result)
+    
 
 eval_results(results, gesamt_anzahl)
