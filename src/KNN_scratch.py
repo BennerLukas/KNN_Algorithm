@@ -42,14 +42,18 @@ def calc_distance(row1, row2):
 
 def get_neighbour(X_train, test1, k,y1):
     'ermittelt die k nächsten Nachbarn und gibt sie in Liste zurück'
-    euclid_distances = X_train.apply(lambda row: distance.euclidean(row,test1),axis=1)
+    t1=time.time()
+    euclid_distances = X_train.apply(lambda row: distance.euclidean(row,test1),axis=1)  #slow!!
+    print(f"get_neighbour: {(time.time()-t1):.5f}")
     distance_data= pd.DataFrame(data={"dist": euclid_distances, "idx": euclid_distances.index, "y":y1})
     distance_data.sort_values(by=["dist"],inplace=True)
+    
     return distance_data[:k]
 
 def predict(neighbours):
     'ermittelt aus y der Nachbarn das y des zu bestimmtenden Pilzes'
-    y= [i[-1] for i in neighbours]
+    y= neighbours.y.values
+    y = y.tolist()
     pred = max(set(y), key=y.count) # gibt häufigste Klasse
     return pred
 
@@ -74,16 +78,27 @@ def eval_results(results, anz):
     eval_dict = dict(zip(key, values))
 
     print(eval_dict)
-
-    tp= eval_dict["TP"]
-    fn=eval_dict["FN"]
-    tn = eval_dict["TN"]
-    fp = eval_dict["FP"]
+    try:
+        tp= eval_dict["TP"]
+    except:
+        tp=0
+    try:
+        fn=eval_dict["FN"]
+    except:
+        fn=0
+    try:
+        tn = eval_dict["TN"]
+    except:
+        tn=0
+    try:
+        fp = eval_dict["FP"]
+    except:
+        fp=0
 
     sensitivity = tp / (tp+fn)
     precision = tp/(tp+fp)
     accuracy = (tp+tn)/(tp+tn+fp+fn)
-    print(sensitivity, precision, accuracy)
+    print(f"sensitivity:{sensitivity}, precision:{precision}, accuracy:{accuracy}")
 
 #-------------------------------#
 file_path= r".\data\mushrooms.csv"
@@ -104,9 +119,7 @@ for i in range(gesamt_anzahl):
     neighbour = get_neighbour(X_train, row, 5, y_train.iloc[i])
     pred = predict(neighbour)
     result = valid(y_test.iloc[i], pred)
-    # print(result)
     results.append(result)
-    
     print(f"Zeit: {(time.time()-t0):.5f}")
 
 eval_results(results, gesamt_anzahl)
