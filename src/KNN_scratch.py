@@ -7,6 +7,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from collections import  Counter
 import time
+from scipy.spatial import  distance
 
 def read(file_path):
     'Lese die Pilz-Daten ein'
@@ -34,24 +35,17 @@ def label_encode(data):
 
 def calc_distance(row1, row2):
     'berechnet euklidischen Abstand: sqrt((x1-x2)**2)'
-    distance=0
+    distances=0
     for i in range(len(row1)):
-        distance += (row1[i] - row2[i] )**2
-    return math.sqrt(distance)
+        distances += (row1[i] - row2[i] )**2
+    return math.sqrt(distances)
 
-def get_neighbour(train, row_test, k,y):
+def get_neighbour(X_train, test1, k,y1):
     'ermittelt die k nächsten Nachbarn und gibt sie in Liste zurück'
-    t1 = time.time()
-    distances = []
-    for row in train:
-        dist=calc_distance(row_test, row)
-        distances.append((row,dist,y))
-    distances.sort(key=lambda t: t[1]) #sortiert nach der zweiten Stelle im Tupel
-    neighbours = []
-    for i in range(k):
-        neighbours.append(distances[i])
-    print(f"get_Neighbour: {(time.time()-t1):.6f}")
-    return neighbours
+    euclid_distances = X_train.apply(lambda row: distance.euclidean(row,test1),axis=1)
+    distance_data= pd.DataFrame(data={"dist": euclid_distances, "idx": euclid_distances.index, "y":y1})
+    distance_data.sort_values(by=["dist"],inplace=True)
+    return distance_data[:k]
 
 def predict(neighbours):
     'ermittelt aus y der Nachbarn das y des zu bestimmtenden Pilzes'
@@ -101,13 +95,13 @@ y = y_train.tolist()
 train = X_train.values.tolist()
 
 results=[]
-gesamt_anzahl=100
+gesamt_anzahl=10
 for i in range(gesamt_anzahl):
 
     t0 = time.time()
 
-    row = X_test.iloc[i].tolist()
-    neighbour = get_neighbour(train, row, 5, y_train.iloc[i])
+    row = X_test.iloc[i]
+    neighbour = get_neighbour(X_train, row, 5, y_train.iloc[i])
     pred = predict(neighbour)
     result = valid(y_test.iloc[i], pred)
     # print(result)
