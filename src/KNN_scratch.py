@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np 
 import sklearn
-import  math
+import math
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
@@ -10,7 +10,6 @@ import time
 
 def read(file_path):
     'Lese die Pilz-Daten ein'
-    # file_path= r".\data\mushrooms.csv"
     data = pd.read_csv(file_path, sep=",")
     return data
 
