@@ -18,6 +18,8 @@ def read(file_path):
 
 def split_data(data):
     'Label encode Daten und erstelle Test und Trainingsdatensätze'
+    data = data[["class", "cap-shape","stalk-surface-above-ring", "stalk-surface-below-ring","odor", "gill-color","stalk-root","stalk-color-above-ring",
+    "stalk-color-below-ring", "ring-number", "ring-type", "spore-print-color", "population", "habitat"]]
     y = data["class"]
     X = data.drop(["class"],axis=1)
     X_train, X_test, y_train, y_test = train_test_split(X,y, train_size=0.7, test_size=0.3, random_state=5)

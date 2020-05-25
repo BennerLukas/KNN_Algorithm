@@ -15,6 +15,9 @@ def read(file_path):
 
 def prepare_data(data):
     data = label_encode(data)
+    print(data.head())
+    data = data[["class", "cap-shape","stalk-surface-above-ring", "stalk-surface-below-ring","odor", "gill-color","stalk-root","stalk-color-above-ring",
+    "stalk-color-below-ring", "ring-number", "ring-type", "spore-print-color", "population", "habitat"]]
     y = data["class"]
     X = data.drop(["class"],axis=1)
     X_train, X_test, y_train, y_test = train_test_split(X,y, train_size=0.8, test_size=0.2, random_state=5)
@@ -88,7 +91,7 @@ def eval_results(results, anz):
     sensitivity = tp / (tp+fn)
     precision = tp/(tp+fp)
     accuracy = (tp+tn)/(tp+tn+fp+fn)
-    print(sensitivity, precision, accuracy)
+    print(f"sensitivity:{sensitivity}, precision:{precision}, accuracy:{accuracy}")
 
 #-------------------------------#
 file_path= r".\data\mushrooms.csv"
