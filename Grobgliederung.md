@@ -6,6 +6,8 @@
 - Einstellungen / Parameter
     - Hyperparameteroptimisierung
 
+
+
 # Aufgaben
 - Litereraturrechereche
 - Datensatz suchen

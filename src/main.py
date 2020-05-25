@@ -81,7 +81,7 @@ file_path= r".\data\mushrooms.csv"
 
 raw_data = read(file_path)
 data = label_encode(raw_data)
-visualize_data(data)
+# visualize_data(data)
 
 
 (X_train, X_test, X_valid, y_train, y_test, y_valid) = split_data(data)
@@ -90,5 +90,5 @@ train(knn,X_train, X_test,y_train, y_test)
 
 
 
-# print("Validation:")
-# valid(X_valid, y_valid, knn)
+print("Validation:")
+valid(X_valid, y_valid, knn)
