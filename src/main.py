@@ -17,9 +17,9 @@ def read(file_path):
 
 
 def split_data(data):
-    'INput LabelEcode Daten: erstelle Test und Trainingsdatensätze'
-    data = data[["class", "cap-shape","stalk-surface-above-ring", "stalk-surface-below-ring","odor", "gill-color","stalk-root","stalk-color-above-ring",
-    "stalk-color-below-ring", "ring-number", "ring-type", "spore-print-color", "population", "habitat"]]
+    'Input LabelEcode Daten: erstelle Test und Trainingsdatensätze'
+    data = data[["class", "cap-shape","odor", "gill-color","stalk-color-above-ring",
+    "stalk-color-below-ring", "ring-type", "spore-print-color", "population", "habitat"]]
     y = data["class"]
     X = data.drop(["class"],axis=1)
     X_train, X_test, y_train, y_test = train_test_split(X,y, train_size=0.7, test_size=0.3, random_state=5)
@@ -36,7 +36,11 @@ def label_encode(data):
 
 def visualize_data(data):
     print(data.head())
-    # create_scatter_plot(X,y)
+    plot_data= data[["odor", "cap-color"]]
+    
+    noise = np.random.normal(0,0.1,plot_data.shape)
+    plot_data = plot_data +noise
+    create_scatter_plot(plot_data,data["class"])
     
     col=data.columns.values[:11]
     # data= data[col]
@@ -46,13 +50,13 @@ def visualize_data(data):
     plt.show()
 
 def create_scatter_plot(X,y, name="Scatter-Plot", xlabel=None, ylabel=None):
-    plt.scatter(X["odor"],X["cap-color"],c=y)
+    plt.scatter(X["odor"],X["cap-color"],c=y, alpha=0.2)
     
     plt.show()
 
 def knn_model(k=5):
     'erstelle das KNN Model mit seinen Parametern'
-    knn = KNeighborsClassifier(n_neighbors=k,metric="euclidean", leaf_size=30)
+    knn = KNeighborsClassifier(n_neighbors=k,metric="euclidean",algorithm="brute")
     print(knn)
     return knn
 def train(knn, X_train, X_test, y_train, y_test):
@@ -83,7 +87,7 @@ file_path= r".\data\mushrooms.csv"
 
 raw_data = read(file_path)
 data = label_encode(raw_data)
-# visualize_data(data)
+visualize_data(data)
 
 
 (X_train, X_test, X_valid, y_train, y_test, y_valid) = split_data(data)
@@ -92,5 +96,5 @@ train(knn,X_train, X_test,y_train, y_test)
 
 
 
-print("Validation:")
-valid(X_valid, y_valid, knn)
+# print("Validation:")
+# valid(X_valid, y_valid, knn)

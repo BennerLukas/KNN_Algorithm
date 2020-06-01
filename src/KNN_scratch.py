@@ -5,6 +5,7 @@ import math
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
+from sklearn import metrics
 from collections import  Counter
 import time
 
@@ -13,26 +14,21 @@ def read(file_path):
     data = pd.read_csv(file_path, sep=",")
     return data
 
-def prepare_data(data):
-    data = label_encode(data)
-    print(data.head())
-    data = data[["class", "cap-shape","stalk-surface-above-ring", "stalk-surface-below-ring","odor", "gill-color","stalk-root","stalk-color-above-ring",
-    "stalk-color-below-ring", "ring-number", "ring-type", "spore-print-color", "population", "habitat"]]
+
+def split_data(data):
+    'Input LabelEcode Daten: erstelle Test und Trainingsdatensätze'
     y = data["class"]
-    X = data.drop(["class"],axis=1)
+    X = data[["cap-shape","odor"]]
     X_train, X_test, y_train, y_test = train_test_split(X,y, train_size=0.8, test_size=0.2, random_state=5)
     
     return X_train, X_test, y_train, y_test
 
 def label_encode(data):
-
+    'Label-Encode Daten -> aus String wird einzigartige Zahl'
     encoder = LabelEncoder()
     for  col in data.columns:
         data[col]=encoder.fit_transform(data[col])
     return data
-
-
-
 
 def calc_distance(row1, row2):
     'berechnet euklidischen Abstand: sqrt((x1-x2)**2)'
@@ -42,8 +38,7 @@ def calc_distance(row1, row2):
     return math.sqrt(distance)
 
 def get_neighbour(train, row_test, k,y):
-    'ermittelt die k nächsten Nachbarn und gibt sie in Liste zurück'
-    t1 = time.time()
+    'ermittelt die k nächsten Nachbarn und gibt sie in Liste zurück'    
     distances = []
     for row in train:
         dist=calc_distance(row_test, row)
@@ -52,12 +47,12 @@ def get_neighbour(train, row_test, k,y):
     neighbours = []
     for i in range(k):
         neighbours.append(distances[i])
-    print(f"get_Neighbour: {(time.time()-t1):.6f}")
     return neighbours
 
 def predict(neighbours):
     'ermittelt aus y der Nachbarn das y des zu bestimmtenden Pilzes'
-    y= [i[-1] for i in neighbours]
+    neighbours
+    y= [i[-1] for i in neighbours] # gibt die Klasse aller Nachbarn in Liste aus
     pred = max(set(y), key=y.count) # gibt häufigste Klasse
     return pred
 
@@ -97,16 +92,15 @@ def eval_results(results, anz):
 file_path= r".\data\mushrooms.csv"
 
 raw_data = read(file_path)
-X_train, X_test, y_train, y_test = prepare_data(raw_data)
+data= label_encode((raw_data))
+X_train, X_test, y_train, y_test = split_data(data)
 
 y = y_train.tolist()
 train = X_train.values.tolist()
 
 results=[]
-gesamt_anzahl=100
+gesamt_anzahl=10
 for i in range(gesamt_anzahl):
-
-    t0 = time.time()
 
     row = X_test.iloc[i].tolist()
     neighbour = get_neighbour(train, row, 5, y_train.iloc[i])
@@ -114,7 +108,7 @@ for i in range(gesamt_anzahl):
     result = valid(y_test.iloc[i], pred)
     # print(result)
     results.append(result)
-    
-    print(f"Zeit: {(time.time()-t0):.5f}")
 
+print(results)
+# class_report = metrics.classification_report()
 eval_results(results, gesamt_anzahl)
