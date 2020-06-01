@@ -1,5 +1,5 @@
 import pandas as pd
-import numpy as np #
+import numpy as np 
 import sklearn
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
@@ -17,7 +17,7 @@ def read(file_path):
 
 
 def split_data(data):
-    'Label encode Daten und erstelle Test und Trainingsdatensätze'
+    'INput LabelEcode Daten: erstelle Test und Trainingsdatensätze'
     data = data[["class", "cap-shape","stalk-surface-above-ring", "stalk-surface-below-ring","odor", "gill-color","stalk-root","stalk-color-above-ring",
     "stalk-color-below-ring", "ring-number", "ring-type", "spore-print-color", "population", "habitat"]]
     y = data["class"]
@@ -52,7 +52,7 @@ def create_scatter_plot(X,y, name="Scatter-Plot", xlabel=None, ylabel=None):
 
 def knn_model(k=5):
     'erstelle das KNN Model mit seinen Parametern'
-    knn = KNeighborsClassifier(n_neighbors=k,metric="euclidean")
+    knn = KNeighborsClassifier(n_neighbors=k,metric="euclidean", leaf_size=30)
     print(knn)
     return knn
 def train(knn, X_train, X_test, y_train, y_test):
