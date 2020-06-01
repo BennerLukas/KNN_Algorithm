@@ -18,8 +18,7 @@ def read(file_path):
 
 def split_data(data):
     'Input LabelEcode Daten: erstelle Test und Trainingsdatensätze'
-    data = data[["class", "cap-shape","odor", "gill-color","stalk-color-above-ring",
-    "stalk-color-below-ring", "ring-type", "spore-print-color", "population", "habitat"]]
+    data = data[["class", "cap-shape","odor"]]
     y = data["class"]
     X = data.drop(["class"],axis=1)
     X_train, X_test, y_train, y_test = train_test_split(X,y, train_size=0.7, test_size=0.3, random_state=5)
@@ -42,12 +41,12 @@ def visualize_data(data):
     plot_data = plot_data +noise
     create_scatter_plot(plot_data,data["class"])
     
-    col=data.columns.values[:11]
-    # data= data[col]
-    print(data)
-    sns.pairplot(data, hue="class")
-    plt.savefig("Scatter_Matrix")
-    plt.show()
+    # col=data.columns.values[:11]
+    # # data= data[col]
+    # print(data)
+    # sns.pairplot(data, hue="class")
+    # plt.savefig("Scatter_Matrix")
+    # plt.show()
 
 def create_scatter_plot(X,y, name="Scatter-Plot", xlabel=None, ylabel=None):
     plt.scatter(X["odor"],X["cap-color"],c=y, alpha=0.2)
@@ -87,7 +86,7 @@ file_path= r".\data\mushrooms.csv"
 
 raw_data = read(file_path)
 data = label_encode(raw_data)
-visualize_data(data)
+# visualize_data(data)
 
 
 (X_train, X_test, X_valid, y_train, y_test, y_valid) = split_data(data)

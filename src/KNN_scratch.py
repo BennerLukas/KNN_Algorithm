@@ -19,7 +19,7 @@ def split_data(data):
     'Input LabelEcode Daten: erstelle Test und Trainingsdatensätze'
     y = data["class"]
     X = data[["cap-shape","odor"]]
-    X_train, X_test, y_train, y_test = train_test_split(X,y, train_size=0.8, test_size=0.2, random_state=5)
+    X_train, X_test, y_train, y_test = train_test_split(X,y, train_size=0.7, test_size=0.3, random_state=123)
     
     return X_train, X_test, y_train, y_test
 
@@ -78,10 +78,23 @@ def eval_results(results, anz):
 
     print(eval_dict)
 
-    tp= eval_dict["TP"]
-    fn=eval_dict["FN"]
-    tn = eval_dict["TN"]
-    fp = eval_dict["FP"]
+    try:
+        tp= eval_dict["TP"]
+    except:
+        tp=0
+    try:
+        fn=eval_dict["FN"]
+    except:
+        fn=0
+    try:
+        tn = eval_dict["TN"]
+    except:
+        tn=0
+    try:
+        fp = eval_dict["FP"]
+    except:
+        fp=0
+
 
     sensitivity = tp / (tp+fn)
     precision = tp/(tp+fp)
@@ -99,16 +112,24 @@ y = y_train.tolist()
 train = X_train.values.tolist()
 
 results=[]
-gesamt_anzahl=10
+# len(X_test)
+gesamt_anzahl= 10
+preds = pd.Series()
 for i in range(gesamt_anzahl):
-
+    t0 = time.time()
     row = X_test.iloc[i].tolist()
-    neighbour = get_neighbour(train, row, 5, y_train.iloc[i])
-    pred = predict(neighbour)
+    neighbours = get_neighbour(train, row, 10, y_train.iloc[i])
+    pred = predict(neighbours)
+    preds = preds.append(pd.Series([pred]))
     result = valid(y_test.iloc[i], pred)
-    # print(result)
     results.append(result)
+    print(f"Zeit: {(time.time()-t0):.2}")
 
-print(results)
+
+real = pd.DataFrame(data=y_test)
+real = real[:gesamt_anzahl]
+print(preds, real)
+valid_data = real.insert(1,"pred",preds, allow_duplicates=True)
+print(valid_data)
 # class_report = metrics.classification_report()
 eval_results(results, gesamt_anzahl)
