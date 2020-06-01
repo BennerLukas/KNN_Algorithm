@@ -6,21 +6,23 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import metrics
+from matplotlib.colors import ListedColormap
+
 import seaborn as sns
 
 def read(file_path):
     'Lese die Pilz-Daten ein'
     # file_path= r".\data\mushrooms.csv"
     data = pd.read_csv(file_path, sep=",")
+    data=data[["class","cap-shape","odor"]]
     return data
 
 
 
 def split_data(data):
     'Input LabelEcode Daten: erstelle Test und Trainingsdatensätze'
-    data = data[["class", "cap-shape","odor"]]
     y = data["class"]
-    X = data.drop(["class"],axis=1)
+    X = data[["cap-shape","odor"]]
     X_train, X_test, y_train, y_test = train_test_split(X,y, train_size=0.7, test_size=0.3, random_state=5)
     X_test, X_valid, y_test, y_valid = train_test_split(X_test, y_test, train_size=0.9, random_state=5)
 
@@ -34,23 +36,19 @@ def label_encode(data):
     return data
 
 def visualize_data(data):
-    print(data.head())
-    plot_data= data[["odor", "cap-color"]]
-    
+    plot_data=data[["cap-shape","odor"]]
     noise = np.random.normal(0,0.1,plot_data.shape)
-    plot_data = plot_data +noise
+    plot_data = plot_data +noise    #für bessere Ansicht
     create_scatter_plot(plot_data,data["class"])
     
-    # col=data.columns.values[:11]
-    # # data= data[col]
-    # print(data)
-    # sns.pairplot(data, hue="class")
-    # plt.savefig("Scatter_Matrix")
-    # plt.show()
 
 def create_scatter_plot(X,y, name="Scatter-Plot", xlabel=None, ylabel=None):
-    plt.scatter(X["odor"],X["cap-color"],c=y, alpha=0.2)
-    
+    plt.title("Geruch - Form des Pilzhuts Diagramm ")
+    colour=ListedColormap(["g","r"])
+    scatter =plt.scatter(X["odor"],X["cap-shape"],c=y, cmap=colour, alpha=0.2)
+    plt.xlabel("Geruch")
+    plt.ylabel("Form")
+    plt.legend(handles=scatter.legend_elements()[0], labels=["essbar","giftig"])
     plt.show()
 
 def knn_model(k=5):
@@ -86,7 +84,7 @@ file_path= r".\data\mushrooms.csv"
 
 raw_data = read(file_path)
 data = label_encode(raw_data)
-# visualize_data(data)
+visualize_data(data)
 
 
 (X_train, X_test, X_valid, y_train, y_test, y_valid) = split_data(data)
@@ -95,5 +93,5 @@ train(knn,X_train, X_test,y_train, y_test)
 
 
 
-# print("Validation:")
-# valid(X_valid, y_valid, knn)
+print("Validation:")
+valid(X_valid, y_valid, knn)

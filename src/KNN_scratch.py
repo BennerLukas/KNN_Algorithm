@@ -126,10 +126,10 @@ for i in range(gesamt_anzahl):
     print(f"Zeit: {(time.time()-t0):.2}")
 
 
-real = pd.DataFrame(data=y_test)
-real = real[:gesamt_anzahl]
-print(preds, real)
-valid_data = real.insert(1,"pred",preds, allow_duplicates=True)
-print(valid_data)
+# real = pd.DataFrame(data=y_test)
+# real = real[:gesamt_anzahl]
+# print(preds, real)
+# valid_data = real.insert(1,"pred",preds, allow_duplicates=True)
+# print(valid_data)
 # class_report = metrics.classification_report()
 eval_results(results, gesamt_anzahl)
