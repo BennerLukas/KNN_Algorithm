@@ -21,7 +21,7 @@ X = X[:, [0, 2]]
 X_train, X_test, y_train, y_test = \
     train_test_split(X, y, stratify=y, test_size=0.7, random_state=42)
 
-list_of_neigbors = [1,2,5,6,45]
+list_of_neigbors = [1,2,5,6,20,20,45]
 
 def plot_differnet_scores(list_of_neigbors,X_train,X_test,y_train,y_test):
     scores = []

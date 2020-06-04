@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np 
 import sklearn
 import matplotlib.pyplot as plt
+import seaborn as sbn 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
@@ -49,7 +50,8 @@ def create_scatter_plot(X,y, name="Scatter-Plot", xlabel=None, ylabel=None):
     plt.xlabel("Geruch")
     plt.ylabel("Form")
     plt.legend(handles=scatter.legend_elements()[0], labels=["essbar","giftig"])
-    plt.show()
+    #plt.show()
+    plt.close()
 
 def knn_model(k=5):
     'erstelle das KNN Model mit seinen Parametern'
@@ -66,6 +68,16 @@ def train(knn, X_train, X_test, y_train, y_test):
     print(conf_matrix)
     print(class_report)
     print(f"accuracy:{accurarcy}")
+    return accurarcy
+
+def plot_changes_with_k(list_of_k,X_train, X_test, y_train, y_test):
+    scores = []
+    for x in list_of_k:
+        knn = knn_model(x)
+        score = train(knn,X_train, X_test,y_train, y_test)
+        scores.append(score)
+    sbn.scatterplot(x=scores, y=list_of_k)
+    plt.show()
 
 
 def valid(X_valid, y_valid, knn):
@@ -81,17 +93,19 @@ def valid(X_valid, y_valid, knn):
 
 #------------Main---------------#
 file_path= r".\data\mushrooms.csv"
+file_path= "data/mushrooms.csv"
 
 raw_data = read(file_path)
 data = label_encode(raw_data)
 visualize_data(data)
 
-
 (X_train, X_test, X_valid, y_train, y_test, y_valid) = split_data(data)
+
 knn = knn_model()
 train(knn,X_train, X_test,y_train, y_test)
 
-
+list_of_k = [1,3,5,10,25,50,75,100]
+plot_changes_with_k(list_of_k,X_train, X_test, y_train, y_test)
 
 print("Validation:")
 valid(X_valid, y_valid, knn)
