@@ -65,19 +65,25 @@ def train(knn, X_train, X_test, y_train, y_test):
     accurarcy = metrics.accuracy_score(y_test,  y_prediction)
     conf_matrix = metrics.confusion_matrix(y_test, y_prediction)
     class_report = metrics.classification_report(y_test, y_prediction)
-    print(conf_matrix)
-    print(class_report)
-    print(f"accuracy:{accurarcy}")
+    #print(conf_matrix)
+    #print(class_report)
+    #print(f"accuracy:{accurarcy}")
     return accurarcy
 
 def plot_changes_with_k(list_of_k,X_train, X_test, y_train, y_test):
+    "Schaut sich an wie die Genauigkeit sich bei Veränderung von k verhält"
     scores = []
     for x in list_of_k:
         knn = knn_model(x)
         score = train(knn,X_train, X_test,y_train, y_test)
+        print(X_train.shape)
         scores.append(score)
-    sbn.scatterplot(x=scores, y=list_of_k)
-    plt.show()
+    plt.plot(list_of_k,scores,"-o")
+    plt.title("Auswirkung der Veränderung von k auf die Genauigkeit")
+    plt.ylabel("Genauigkeit")
+    plt.xlabel("K")
+    #plt.show()
+    plt.savefig("Veränderung_K.png")
 
 
 def valid(X_valid, y_valid, knn):
