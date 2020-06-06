@@ -3,6 +3,7 @@ import numpy as np
 import sklearn
 import math
 import matplotlib.pyplot as plt
+import seaborn as sbn
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
@@ -20,6 +21,9 @@ def split_data(data):
     y = data["class"]
     X = data[["cap-shape","odor"]]
     X_train, X_test, y_train, y_test = train_test_split(X,y, train_size=0.7, test_size=0.3, random_state=123)
+
+    sbn.scatterplot(x=data["cap-shape"], y=data.odor, hue=data["class"])
+    plt.show()
     
     return X_train, X_test, y_train, y_test
 
@@ -56,53 +60,19 @@ def predict(neighbours):
     pred = max(set(y), key=y.count) # gibt häufigste Klasse
     return pred
 
-
-def valid(y_test, pred):
-    'ermittle Richtigkeit für Confusion Matrix (TP,FN, TN, FP)'
-    if pred == 1:
-        if y_test == pred:
-            return "TP"
-        else:
-            return "FP"
-    else:
-        if y_test==pred:
-            return "TN"
-        else:
-            return  "FN"
-        
-def eval_results(results, anz):
-    'berechne Kennzahlen zur Validierung des Systems'
-    key = Counter(results).keys()
-    values = Counter(results).values()
-    eval_dict = dict(zip(key, values))
-
-    print(eval_dict)
-
-    try:
-        tp= eval_dict["TP"]
-    except:
-        tp=0
-    try:
-        fn=eval_dict["FN"]
-    except:
-        fn=0
-    try:
-        tn = eval_dict["TN"]
-    except:
-        tn=0
-    try:
-        fp = eval_dict["FP"]
-    except:
-        fp=0
-
-
-    sensitivity = tp / (tp+fn)
-    precision = tp/(tp+fp)
-    accuracy = (tp+tn)/(tp+tn+fp+fn)
-    print(f"sensitivity:{sensitivity}, precision:{precision}, accuracy:{accuracy}")
+def eval_results(preds,real_values):
+    'gibt verschiedene Validationswerte zurück'
+    accurarcy = metrics.accuracy_score(real_values,preds)
+    conf_matrix = metrics.confusion_matrix(real_values,preds)
+    class_report = metrics.classification_report(real_values,preds)
+    #precision = metrics.precision_score(real_values,preds)
+    print(conf_matrix)
+    print(class_report)
+    print(f"accuracy:{accurarcy}")
 
 #-------------------------------#
 file_path= r".\data\mushrooms.csv"
+file_path= "data/mushrooms.csv"
 
 raw_data = read(file_path)
 data= label_encode((raw_data))
@@ -111,25 +81,24 @@ X_train, X_test, y_train, y_test = split_data(data)
 y = y_train.tolist()
 train = X_train.values.tolist()
 
-results=[]
-# len(X_test)
-gesamt_anzahl= 10
+
+gesamt_anzahl= 1000
 preds = pd.Series()
+real_values = pd.Series()
 for i in range(gesamt_anzahl):
     t0 = time.time()
     row = X_test.iloc[i].tolist()
     neighbours = get_neighbour(train, row, 10, y_train.iloc[i])
     pred = predict(neighbours)
     preds = preds.append(pd.Series([pred]))
-    result = valid(y_test.iloc[i], pred)
-    results.append(result)
-    print(f"Zeit: {(time.time()-t0):.2}")
+    real_value = y_test.iloc[i]
+    real_values = real_values.append(pd.Series([real_value]))
+    #print(f"Zeit: {(time.time()-t0):.2}")
 
-
+eval_results(preds,real_values)
 # real = pd.DataFrame(data=y_test)
 # real = real[:gesamt_anzahl]
 # print(preds, real)
 # valid_data = real.insert(1,"pred",preds, allow_duplicates=True)
 # print(valid_data)
 # class_report = metrics.classification_report()
-eval_results(results, gesamt_anzahl)

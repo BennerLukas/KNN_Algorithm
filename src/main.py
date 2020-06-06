@@ -65,9 +65,10 @@ def train(knn, X_train, X_test, y_train, y_test):
     accurarcy = metrics.accuracy_score(y_test,  y_prediction)
     conf_matrix = metrics.confusion_matrix(y_test, y_prediction)
     class_report = metrics.classification_report(y_test, y_prediction)
-    #print(conf_matrix)
-    #print(class_report)
-    #print(f"accuracy:{accurarcy}")
+    #precision = metrics.precision_score(y_test,y_prediction)
+    print(conf_matrix)
+    print(class_report)
+    print(f"accuracy:{accurarcy}")
     return accurarcy
 
 def plot_changes_with_k(list_of_k,X_train, X_test, y_train, y_test):
@@ -110,8 +111,8 @@ visualize_data(data)
 knn = knn_model()
 train(knn,X_train, X_test,y_train, y_test)
 
-list_of_k = [1,3,5,10,25,50,75,100]
-plot_changes_with_k(list_of_k,X_train, X_test, y_train, y_test)
+#list_of_k = [1,3,5,10,25,50,75,100]
+#plot_changes_with_k(list_of_k,X_train, X_test, y_train, y_test)
 
 print("Validation:")
 valid(X_valid, y_valid, knn)
