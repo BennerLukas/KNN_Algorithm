@@ -1,6 +1,10 @@
+#Import der Bibliotheken
+
 import pandas as pd
 import numpy as np 
 
+#(nur verwendet zum Datenvorbereiten und Validieren)
+# Algorithmus nur mithilfe von numpy und pandas geschrieben
 import sklearn
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
@@ -91,7 +95,7 @@ for i in range(bereich):
 print(preds)
 print(real_values)
 
-#Evaluierun
+#Evaluierung
 eval_results(preds, real_values)
 
 
