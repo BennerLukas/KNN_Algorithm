@@ -3,7 +3,7 @@ import numpy as np
 import sklearn
 import math
 import matplotlib.pyplot as plt
-import seaborn as sbn
+import seaborn as sns
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
@@ -22,7 +22,7 @@ def split_data(data):
     X = data[["cap-shape","odor"]]
     X_train, X_test, y_train, y_test = train_test_split(X,y, train_size=0.7, test_size=0.3, random_state=123)
 
-    sbn.scatterplot(x=data["cap-shape"], y=data.odor, hue=data["class"])
+    sns.scatterplot(x=data["cap-shape"], y=data.odor, hue=data["class"])
     plt.show()
     
     return X_train, X_test, y_train, y_test

@@ -50,7 +50,7 @@ def create_scatter_plot(X,y, name="Scatter-Plot", xlabel=None, ylabel=None):
     plt.xlabel("Geruch")
     plt.ylabel("Form")
     plt.legend(handles=scatter.legend_elements()[0], labels=["essbar","giftig"])
-    #plt.show()
+    plt.show()
     plt.close()
 
 def knn_model(k=5):
