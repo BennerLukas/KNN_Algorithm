@@ -78,9 +78,9 @@ data = rescaling(data,["cap-shape","odor"])
 X_train, X_test, y_train, y_test = split_data(data)
 
 #Parameter festlegen
-bereich = 100
+bereich = 100 #len(X_train)
 k=5
-#len(X_train)
+
 
 
 real_values = y_test.iloc[:bereich].tolist() # echte Zielvariablen
@@ -98,55 +98,3 @@ print(real_values)
 #Evaluierung
 eval_results(preds, real_values)
 
-
-
-
-
-
-# gesamt_anzahl= 1000
-# preds = pd.Series()
-# real_values = pd.Series()
-# for i in range(gesamt_anzahl):
-#     t0 = time.time()
-#     row = X_test.iloc[i].tolist()
-#     neighbours = get_neighbour(train, row, 10, y_train.iloc[i])
-#     pred = predict(neighbours)
-#     preds = preds.append(pd.Series([pred]))
-#     real_value = y_test.iloc[i]
-#     real_values = real_values.append(pd.Series([real_value]))
-#     print(f"Zeit: {(time.time()-t0):.2}")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# y = y_train.tolist()
-# train = X_train.values.tolist()
-
-
-
-
-
-# eval_results(preds,real_values)
-# real = pd.DataFrame(data=y_test)
-# real = real[:gesamt_anzahl]
-# print(preds, real)
-# valid_data = real.insert(1,"pred",preds, allow_duplicates=True)
-# print(valid_data)
-# class_report = metrics.classification_report()
