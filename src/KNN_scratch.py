@@ -77,23 +77,22 @@ data = label_encode((raw_data))
 data = rescaling(data,["cap-shape","odor"])
 X_train, X_test, y_train, y_test = split_data(data)
 
+
+
 #Parameter festlegen
-bereich = 100 #len(X_train)
+bereich = 100 #len(X_test)
 k=5
-
-
 
 real_values = y_test.iloc[:bereich].tolist() # echte Zielvariablen
 preds = [] # Vorhersage der Zielvariable
+
+
 
 #Nachbarberechnung und Vorhersage
 for i in range(bereich):
     neighbours = get_neighbour(X_train.to_numpy(), X_test.iloc[i].to_numpy(), k, y_train )
     pred = predict(neighbours)
     preds.append(pred)
-
-print(preds)
-print(real_values)
 
 #Evaluierung
 eval_results(preds, real_values)
