@@ -38,7 +38,7 @@ def rescaling(data, param):
 def knn_model(k=5):
     'erstelle das KNN Model mit seinen Parametern'
     knn = KNeighborsClassifier(n_neighbors=k,metric="euclidean",algorithm="brute")
-    print(knn)
+    # print(knn)
     return knn
 
 def train_test(knn, X_train, X_test, y_train, y_test):
@@ -47,8 +47,14 @@ def train_test(knn, X_train, X_test, y_train, y_test):
     y_prediction = knn.predict(X_test)
     accurarcy = metrics.accuracy_score(y_test,  y_prediction)
     class_report = metrics.classification_report(y_test, y_prediction)
+    print("_"*60)
+    print("das verwendete Modell hat folgende Eigenschaften:")
+    print(knn)
+    print("_"*60)
+    print("Evaluierung des Models:")
     print(class_report)
-    print(f"accuracy:{accurarcy}")
+    print(f"Die Genauigkeit beträgt: {accurarcy}")
+    print("_"*60)
     return accurarcy
 
 

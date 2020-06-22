@@ -64,8 +64,12 @@ def eval_results(preds,real_values):
     'gibt verschiedene Validationswerte zurück'
     accurarcy = metrics.accuracy_score(real_values,preds)
     class_report = metrics.classification_report(real_values,preds)
+    print("_"*60)
+    print("Evaluierung des Models:")
     print(class_report)
-    print(f"accuracy:{accurarcy}")
+    print(f"Die Genauigkeit beträgt: {accurarcy}")
+    print("_"*60)
+    return accurarcy
 
 #-------------------------------#
 
