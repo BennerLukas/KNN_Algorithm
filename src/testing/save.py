@@ -51,7 +51,7 @@ def create_scatter_plot(X,y, name="Scatter-Plot", xlabel=None, ylabel=None):
     plt.ylabel("Form")
     plt.legend(handles=scatter.legend_elements()[0], labels=["essbar","giftig"])
     plt.show()
-    plt.close()
+    plt.savefig("data/Scatter-Plot.svg")
 
 def knn_model(k=5):
     'erstelle das KNN Model mit seinen Parametern'
