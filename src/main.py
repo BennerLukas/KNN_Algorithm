@@ -1,17 +1,19 @@
 #Import der Bibliotheken
 import pandas as pd
 import numpy as np 
+import matplotlib.pyplot as plt
 
 import sklearn
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import metrics
+from sklearn.metrics import plot_confusion_matrix
 
-#Definitionen der Funktionen
+#Definitionen der Funktionenpl
 def read(file_path):
     'Lese die Pilz-Daten ein'
-    data = pd.read_csv(file_path, sep=",")
+    data = pd.read_csv(file_path, sep=",")      # Wenn Fehler dann in Zeile 68 Pfad ändern.
     data=data[["class","cap-shape","odor"]]
     return data
 
@@ -47,6 +49,8 @@ def train_test(knn, X_train, X_test, y_train, y_test):
     y_prediction = knn.predict(X_test)
     accurarcy = metrics.accuracy_score(y_test,  y_prediction)
     class_report = metrics.classification_report(y_test, y_prediction)
+    disp = plot_confusion_matrix(knn, X_test, y_test, display_labels=["essbar", "giftig"], cmap=plt.cm.Reds, normalize="true")
+    disp.ax_.set_title("Confusion Matrix")
     print("_"*60)
     print("das verwendete Modell hat folgende Eigenschaften:")
     print(knn)
@@ -55,12 +59,13 @@ def train_test(knn, X_train, X_test, y_train, y_test):
     print(class_report)
     print(f"Die Genauigkeit beträgt: {accurarcy}")
     print("_"*60)
+    plt.show()
     return accurarcy
 
 
 
 #------------Main---------------#
-file_path= "data/mushrooms.csv" # Pfad muss gegebenenfalls angepasst werden
+file_path= "src/mushrooms.csv" # Pfad muss gegebenenfalls angepasst werden
 
 #Datenvorbereitung
 raw_data = read(file_path)

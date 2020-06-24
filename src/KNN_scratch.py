@@ -2,6 +2,7 @@
 
 import pandas as pd
 import numpy as np 
+import matplotlib.pyplot as plt
 
 #(nur verwendet zum Datenvorbereiten und Validieren)
 # Algorithmus nur mithilfe von numpy und pandas geschrieben
@@ -9,8 +10,7 @@ import sklearn
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
-
-import time
+from sklearn.metrics import ConfusionMatrixDisplay
 
 def read(file_path):
     'Lese die Pilz-Daten ein'
@@ -64,16 +64,20 @@ def eval_results(preds,real_values):
     'gibt verschiedene Validationswerte zurück'
     accurarcy = metrics.accuracy_score(real_values,preds)
     class_report = metrics.classification_report(real_values,preds)
+    conf_metrics = metrics.confusion_matrix(real_values,preds)
+    disp = ConfusionMatrixDisplay(confusion_matrix=conf_metrics, display_labels=["essbar", "giftig"])
+    disp = disp.plot(cmap=plt.cm.Reds)
     print("_"*60)
     print("Evaluierung des Models:")
     print(class_report)
     print(f"Die Genauigkeit beträgt: {accurarcy}")
     print("_"*60)
+    plt.show()
     return accurarcy
 
 #-------------------------------#
-
-file_path= "data/mushrooms.csv" # Pfad muss gegebenenfalls angepasst werden
+#Wähle passenden Pfad aus:
+file_path= "src/mushrooms.csv" # Pfad muss gegebenenfalls angepasst werden
 
 #Datenvorbereitung
 raw_data = read(file_path)
