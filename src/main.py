@@ -45,12 +45,19 @@ def knn_model(k=5):
 
 def train_test(knn, X_train, X_test, y_train, y_test):
     '"trainiere" das KNN_Model mit Trainingsdaten und Teste es auf neuen Daten'
+    #trainiere
     knn.fit(X_train, y_train)
+
+    #vorhersage
     y_prediction = knn.predict(X_test)
+
+    #evaluierung
     accurarcy = metrics.accuracy_score(y_test,  y_prediction)
     class_report = metrics.classification_report(y_test, y_prediction)
     disp = plot_confusion_matrix(knn, X_test, y_test, display_labels=["essbar", "giftig"], cmap=plt.cm.Reds, normalize="true")
     disp.ax_.set_title("Confusion Matrix")
+
+    #ausgabe
     print("_"*60)
     print("das verwendete Modell hat folgende Eigenschaften:")
     print(knn)
