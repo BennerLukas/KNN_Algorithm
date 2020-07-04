@@ -54,6 +54,7 @@ def train_test(knn, X_train, X_test, y_train, y_test):
     #evaluierung
     accurarcy = metrics.accuracy_score(y_test,  y_prediction)
     class_report = metrics.classification_report(y_test, y_prediction)
+    #Visualisierung der Confusion Matrix:
     disp = plot_confusion_matrix(knn, X_test, y_test, display_labels=["essbar", "giftig"], cmap=plt.cm.Reds, normalize="true")
     disp.ax_.set_title("Confusion Matrix")
 
