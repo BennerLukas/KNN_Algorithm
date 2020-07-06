@@ -50,14 +50,14 @@ def get_neighbour(points, x1, k,y):
     for i in range(len(points)):
         dist=calc_distance(x1, points[i])
         distances.append((dist,y.iloc[i]))
-    distances.sort(key=lambda t: t[0]) #sortiert nach der Ersten Stelle im Tupel
+    distances.sort() #sortiert nach der Ersten Stelle im Tupel
     return distances[:k]
 
 
 def predict(neighbours):
     'ermittelt aus y der Nachbarn das y des zu bestimmtenden Pilzes'
     y= [i[-1] for i in neighbours] # gibt die Klasse aller Nachbarn in Liste aus
-    pred = max(set(y), key=y.count) # gibt häufigste Klasse
+    pred = max(y, key=y.count) # gibt häufigste Klasse
     return int(pred)
 
 def eval_results(preds,real_values):
