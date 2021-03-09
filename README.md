@@ -1,4 +1,9 @@
 # KNN_Algorithm
+[![GitHub issues](https://img.shields.io/github/issues/BennerLukas/KNN_Algorithm)](https://github.com/BennerLukas/KNN_Algorithm/issues)
+[![GitHub forks](https://img.shields.io/github/forks/BennerLukas/KNN_Algorithm)](https://github.com/BennerLukas/KNN_Algorithm/network)
+[![GitHub stars](https://img.shields.io/github/stars/BennerLukas/KNN_Algorithm)](https://github.com/BennerLukas/KNN_Algorithm/stargazers)
+[![GitHub license](https://img.shields.io/github/license/BennerLukas/KNN_Algorithm)](https://github.com/BennerLukas/KNN_Algorithm)
+
 ## Hausarbeit über KNN
 Der KNN-Algorithmus zählt zu den einfachsten Machine Learning Algorithmen, da er besonders durch die Bibilothek sklearn einfach zu implementieren ist. Um auf die Klassifizierung eines Datenpunktes zu schließen verwendet der KNN-Algorithmus die Annotation der nächsten Nachbarn. Folgende Parameter müssen beim Training bestimmt werden:
 - n_neighbors (Anzahl der betrachteten Nachbarn)
